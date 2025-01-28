@@ -1,5 +1,7 @@
 package jp.houlab.mochidsuki.carePackage;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,5 +21,15 @@ public final class CarePackage extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if(cmd.getName().equalsIgnoreCase("carepackage")) {
+            if(args.length >= 4) {
+
+            }
+            SpawnPackage.spawn();
+        }
     }
 }

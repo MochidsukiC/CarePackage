@@ -2,3 +2,8 @@ name: CarePackage
 version: '1.0-SNAPSHOT'
 main: jp.houlab.mochidsuki.carePackage.CarePackage
 api-version: '1.20'
+
+commands:
+  carepackage:
+    description: ケアパッケージプラグインデバッグ用コマンド
+    usage: /carepackage
