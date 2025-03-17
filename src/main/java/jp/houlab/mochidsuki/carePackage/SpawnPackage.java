@@ -4,6 +4,7 @@ import org.bukkit.*;
 import org.bukkit.entity.ChestBoat;
 import org.bukkit.loot.LootTable;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 
 import java.util.Random;
@@ -20,6 +21,7 @@ public class SpawnPackage {
     static public void spawn(LootTable table, Location location) {
         ChestBoat carePackage = location.getWorld().spawn(location, ChestBoat.class);
         carePackage.setLootTable(table);
+        carePackage.setGlowing(true);
         spawnFallingParticle(carePackage);
     }
 
@@ -104,9 +106,11 @@ public class SpawnPackage {
             public void run() {
                 //降下中のパーティクル
                 Location loc = carePackage.getLocation();
-                loc.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION,loc,5,0.2,0.2,0.2,1, new Particle.DustTransition(Color.WHITE,Color.WHITE,2));
+                loc.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION,loc,5,0.2,0.2,0.2,1, new Particle.DustTransition(Color.WHITE,Color.WHITE,2),true);
                 //loc.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION,loc,5,0.2,0.2,0.2,1, new Particle.DustTransition(Color.WHITE,Color.WHITE,2));
-                loc.getWorld().spawnParticle(Particle.LAVA,loc,3,0.2,0.2,0.2,1);
+                loc.getWorld().spawnParticle(Particle.LAVA,loc,3,0.2,0.2,0.2,1,null,true);
+
+                carePackage.setVelocity(new Vector(0,-0.2,0));
 
                 //着陸検知
                 if(!carePackage.getLocation().add(0,-1,0).getBlock().getType().equals(Material.AIR)){
