@@ -30,7 +30,7 @@ public class SpawnPackage {
      */
     static public void spawn(int tier, Location location) {
         if(config.getString("PackageLootTable.Tier"+tier) != null) {
-            spawn(plugin.getServer().getLootTable(NamespacedKey.minecraft(config.getString("PackageLootTable.Tier" + tier))), location);
+            spawn(plugin.getServer().getLootTable(NamespacedKey.fromString(config.getString("PackageLootTable.Tier" + tier))), location);
         }
     }
 
@@ -61,7 +61,7 @@ public class SpawnPackage {
      */
     static public void randomSpawn(int tier, Location pos1, Location pos2) {
         if(config.getString("PackageLootTable.Tier"+tier) != null) {
-            LootTable table = (plugin.getServer().getLootTable(NamespacedKey.minecraft(config.getString("PackageLootTable.Tier" + tier))));
+            LootTable table = (plugin.getServer().getLootTable(NamespacedKey.fromString(config.getString("PackageLootTable.Tier" + tier))));
             randomSpawn(table, pos1, pos2);
         }
     }
@@ -90,7 +90,7 @@ public class SpawnPackage {
      */
     static public void randomSpawn(int tier, Location center, int radius) {
         if(config.getString("PackageLootTable.Tier"+tier) != null) {
-            LootTable table = (plugin.getServer().getLootTable(NamespacedKey.minecraft(config.getString("PackageLootTable.Tier" + tier))));
+            LootTable table = (plugin.getServer().getLootTable(NamespacedKey.fromString(config.getString("PackageLootTable.Tier" + tier))));
             randomSpawn(table, center, radius);
         }
     }
