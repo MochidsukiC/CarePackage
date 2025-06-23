@@ -31,7 +31,7 @@ public final class CarePackage extends JavaPlugin {
             if(args.length >= 4) {
                 SpawnPackage.spawn(Integer.parseInt(args[0]),new Location(((Player) sender).getLocation().getWorld(),Integer.parseInt(args[1]),Integer.parseInt(args[2]),Integer.parseInt(args[3])));
             }
-            SpawnPackage.randomSpawn(Integer.parseInt(args[0]),((Player) sender).getLocation(),2);
+            SpawnPackage.randomSpawn(Integer.parseInt(args[0]),((Player) sender).getLocation(),10);
         }
         return true;
     }

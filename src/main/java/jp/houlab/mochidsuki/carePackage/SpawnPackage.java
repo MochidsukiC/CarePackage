@@ -49,8 +49,28 @@ public class SpawnPackage {
         int x2 = pos2.getBlockX();
         int z2 = pos2.getBlockZ();
         Random random = new Random();
-        int randomX = random.nextInt(x2 - x1 + 1) + x1;
-        int randomZ = random.nextInt(z2 - z1 + 1) + z1;
+        int randomX = 0;
+        int randomZ = 0;
+        for (int ii = 0; ii < Math.abs(pos1.getBlockX()-pos2.getBlockX()) * Math.abs(pos1.getBlockZ()-pos2.getBlockZ()); ii++) {
+            randomX = random.nextInt(x2 - x1 + 1) + x1;
+            randomZ = random.nextInt(z2 - z1 + 1) + z1;
+            boolean foundObstacles = false;
+            boolean foundFloor = false;
+            for(int i = 300; i > config.getInt("Height.MAX"); i--) {
+                if (pos1.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                    foundObstacles = true;
+                }
+            }
+            for(int i = config.getInt("Height.MIN"); i < config.getInt("Height.MAX"); i++) {
+                if (pos1.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                    foundFloor = true;
+                }
+            }
+            if(!foundObstacles && foundFloor) {
+                break;
+            }
+
+        }
         int y = (pos1.getBlockY() + pos2.getBlockY())/2;
         spawn(table,new Location(pos1.getWorld(), randomX, y, randomZ));
     }
@@ -75,11 +95,29 @@ public class SpawnPackage {
      * @param radius スポーン範囲の半径
      */
     static public void randomSpawn(LootTable table, Location center, int radius) {
-        int x = center.getBlockX();
-        int z = center.getBlockZ();
         Random random = new Random();
-        int randomX = random.nextInt(radius*2) - radius + center.getBlockX();
-        int randomZ = random.nextInt(radius*2) - radius + center.getBlockZ();
+        int randomX = 0;
+        int randomZ = 0;
+        for (int ii = 0; ii < Math.abs(radius*radius); ii++) {
+            randomX = random.nextInt(radius*2) - radius + center.getBlockX();
+            randomZ = random.nextInt(radius*2) - radius + center.getBlockZ();
+            boolean foundObstacles = false;
+            boolean foundFloor = false;
+            for(int i = 300; i > config.getInt("Height.MAX"); i--) {
+                if (center.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                    foundObstacles = true;
+                }
+            }
+            for(int i = config.getInt("Height.MIN"); i < config.getInt("Height.MAX"); i++) {
+                if (center.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                    foundFloor = true;
+                }
+            }
+            if(!foundObstacles && foundFloor) {
+                break;
+            }
+
+        }
 
         spawn(table , new Location(center.getWorld(),randomX,center.getBlockY(),randomZ));
     }

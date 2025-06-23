@@ -3,3 +3,6 @@ PackageLootTable:
   Tier2: battleroyale2:chest/ver20
   Tier3: battleroyale2:chest/ver30
   Tier4: battleroyale2:chest/ver40
+Height:
+  MIN: 0
+  MAX: 120
