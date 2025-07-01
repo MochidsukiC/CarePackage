@@ -55,36 +55,48 @@ public class SpawnPackage {
      * @param pos2 スポーン範囲の終点
      */
     static public void randomSpawn(LootTable table, Location pos1, Location pos2) {
-        int x1 = pos1.getBlockX();
-        int z1 = pos1.getBlockZ();
 
-        int x2 = pos2.getBlockX();
-        int z2 = pos2.getBlockZ();
-        Random random = new Random();
-        int randomX = 0;
-        int randomZ = 0;
-        for (int ii = 0; ii < Math.abs(pos1.getBlockX()-pos2.getBlockX()) * Math.abs(pos1.getBlockZ()-pos2.getBlockZ()); ii++) {
-            randomX = random.nextInt(x2 - x1 + 1) + x1;
-            randomZ = random.nextInt(z2 - z1 + 1) + z1;
-            boolean foundObstacles = false;
-            boolean foundFloor = false;
-            for(int i = 320; i > config.getInt("Height.MAX"); i--) {
-                if (pos1.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
-                    foundObstacles = true;
-                }
-            }
-            for(int i = config.getInt("Height.MIN"); i < config.getInt("Height.MAX"); i++) {
-                if (pos1.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
-                    foundFloor = true;
-                }
-            }
-            if(!foundObstacles && foundFloor) {
-                break;
-            }
+        new BukkitRunnable() {
 
-        }
-        int y = (pos1.getBlockY() + pos2.getBlockY())/2;
-        spawn(table,new Location(pos1.getWorld(), randomX, y, randomZ));
+            int times = 0;
+
+            @Override
+            public void run() {
+                int x1 = pos1.getBlockX();
+                int z1 = pos1.getBlockZ();
+
+                int x2 = pos2.getBlockX();
+                int z2 = pos2.getBlockZ();
+                Random random = new Random();
+                int randomX = 0;
+                int randomZ = 0;
+                randomX = random.nextInt(x2 - x1 + 1) + x1;
+                randomZ = random.nextInt(z2 - z1 + 1) + z1;
+                boolean foundObstacles = false;
+                boolean foundFloor = false;
+                for (int i = 320; i > config.getInt("Height.MAX"); i--) {
+                    if (pos1.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                        foundObstacles = true;
+                    }
+                }
+                for (int i = config.getInt("Height.MIN"); i < config.getInt("Height.MAX"); i++) {
+                    if (pos1.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                        foundFloor = true;
+                    }
+                }
+                if (!foundObstacles && foundFloor) {
+                    int y = (pos1.getBlockY() + pos2.getBlockY()) / 2;
+                    spawn(table, new Location(pos1.getWorld(), randomX, y, randomZ));
+                    cancel();
+                }
+
+                times++;
+                if(times>=Math.abs(pos1.getBlockX() - pos2.getBlockX()) * Math.abs(pos1.getBlockZ() - pos2.getBlockZ())){
+                    cancel();
+                }
+
+            }
+        }.runTaskTimer(plugin,1,1);
     }
 
     /**
@@ -108,30 +120,44 @@ public class SpawnPackage {
      */
     static public void randomSpawn(LootTable table, Location center, int radius) {
         Random random = new Random();
-        int randomX = 0;
-        int randomZ = 0;
-        for (int ii = 0; ii < Math.abs(radius*radius); ii++) {
-            randomX = random.nextInt(radius*2) - radius + center.getBlockX();
-            randomZ = random.nextInt(radius*2) - radius + center.getBlockZ();
-            boolean foundObstacles = false;
-            boolean foundFloor = false;
-            for(int i = 320; i > config.getInt("Height.MAX"); i--) {
-                if (center.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
-                    foundObstacles = true;
+        new BukkitRunnable() {
+
+            int times = 0;
+
+            @Override
+            public void run() {
+                int randomX = random.nextInt(radius*2) - radius + center.getBlockX();
+                int randomZ = random.nextInt(radius*2) - radius + center.getBlockZ();
+
+                boolean foundObstacles = false;
+                boolean foundFloor = false;
+                int h = config.getInt("Height.MAX");
+                for (
+                        int i = 319;
+                        i > config.getInt("Height.MAX"); i--) {
+                    Material m = center.getWorld().getBlockAt(randomX, i, randomZ).getType();
+
+                    if (center.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                        foundObstacles = true;
+                        break;
+                    }
+                }
+                for (
+                        int i = config.getInt("Height.MIN"); i < config.getInt("Height.MAX"); i++) {
+                    if (center.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
+                        foundFloor = true;
+                    }
+                }
+                if (!foundObstacles && foundFloor) {
+                    spawn(table , new Location(center.getWorld(),randomX,center.getBlockY(),randomZ));
+                    cancel();
+                }
+                times++;
+                if(times >= Math.abs(radius*radius)){
+                    cancel();
                 }
             }
-            for(int i = config.getInt("Height.MIN"); i < config.getInt("Height.MAX"); i++) {
-                if (center.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
-                    foundFloor = true;
-                }
-            }
-            if(!foundObstacles && foundFloor) {
-                break;
-            }
-
-        }
-
-        spawn(table , new Location(center.getWorld(),randomX,center.getBlockY(),randomZ));
+        }.runTaskTimer(plugin,1,1);
     }
 
     /**
