@@ -4,6 +4,9 @@ import org.bukkit.*;
 import org.bukkit.entity.ChestBoat;
 import org.bukkit.loot.LootTable;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 
@@ -22,6 +25,15 @@ public class SpawnPackage {
         ChestBoat carePackage = location.getWorld().spawn(location, ChestBoat.class);
         carePackage.setLootTable(table);
         carePackage.setGlowing(true);
+        Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+        Team team;
+        if(board.getTeam("CarePackage") == null) {
+            team = board.registerNewTeam("CarePackage");
+        }else {
+            team = board.getTeam("CarePackage");
+        }
+        team.setColor(ChatColor.YELLOW);
+        team.addEntry(carePackage.getUniqueId().toString());
         spawnFallingParticle(carePackage);
     }
 
@@ -56,7 +68,7 @@ public class SpawnPackage {
             randomZ = random.nextInt(z2 - z1 + 1) + z1;
             boolean foundObstacles = false;
             boolean foundFloor = false;
-            for(int i = 300; i > config.getInt("Height.MAX"); i--) {
+            for(int i = 320; i > config.getInt("Height.MAX"); i--) {
                 if (pos1.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
                     foundObstacles = true;
                 }
@@ -103,7 +115,7 @@ public class SpawnPackage {
             randomZ = random.nextInt(radius*2) - radius + center.getBlockZ();
             boolean foundObstacles = false;
             boolean foundFloor = false;
-            for(int i = 300; i > config.getInt("Height.MAX"); i--) {
+            for(int i = 320; i > config.getInt("Height.MAX"); i--) {
                 if (center.getWorld().getBlockAt(randomX, i, randomZ).getType() != Material.AIR) {
                     foundObstacles = true;
                 }
